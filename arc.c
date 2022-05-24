@@ -1,9 +1,5 @@
 #include "arc.h"
 
-//float fabs( float x ) {
-//    return x < 0 ? -x : x;
-//}
-
 float min( float a, float b ) {
     return a > b ? b : a;
 }

@@ -7,30 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef uint8_t bool;
-
-typedef struct {
-    float x,y;
-} Point;
-
-typedef struct {
-    float x,y;
-} Vector2;
-
-typedef struct {
-    Vector2 r;
-    Point c;
-    float theta;
-    float delta;
-} Centric;
-
-typedef struct {
-    Vector2 r;
-    float angle;
-    bool fa;
-    bool fs;
-    Point p;
-} Endpointic;
+#include "common.h"
 
 Point point_add(Point a, Point b);
 float angle_function( float ux, float uy, float vx, float vy );
