@@ -5,7 +5,7 @@ from xml.dom import minidom
 import matplotlib.pyplot as plt
 from math import sin,cos, fmod, acos, pi
 # read the SVG file
-doc = minidom.parse('plane.svg')
+doc = minidom.parse('ring.svg')
 path_strings = [path.getAttribute('d') for path
                 in doc.getElementsByTagName('path')]
 doc.unlink()
@@ -66,6 +66,7 @@ def end2cen(p1,p2,r,ang,fa,fs):
 
 	theta = svgAngle( 1, 0, (x1p-cxp)/rx, (y1p-cyp)/ry)
 	delta = svgAngle( (x1p-cxp)/rx, (y1p-cyp)/ry, (-x1p-cxp)/rx, (-y1p-cyp)/ry)
+	print("DELTA: " + str(delta))
 
 	delta = fmod(delta, 2*pi)
 
@@ -105,11 +106,14 @@ for path_string in path_strings:
             a = e.radius.real
             b = e.radius.imag
 
+            print(e)
+
             rx,ry,cx,cy,theta,delta = end2cen( (e.start.real,e.start.imag), (e.end.real,e.end.imag), (a,b), e.rotation, e.arc, e.sweep)
 
             print(rx,ry,cx,cy,theta,delta,e.sweep)
 
             step = 0.1
+            e.sweep = True
 
             if not e.sweep:
                 t = theta

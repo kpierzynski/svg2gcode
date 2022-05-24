@@ -2,14 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-//char * path = "M55.618,52.214 C56.052,52.555 56.128,53.184 55.786,53.618 C55.589,53.869 55.296,54 54.999,54 C54.783,54 54.565,53.931 54.382,53.786 L40.382,42.786 C39.948,42.445 39.872,41.817 40.214,41.382 C40.555,40.949 41.181,40.871 41.618,41.214 L55.618,52.214 Z M19.786,41.382 C20.128,41.817 20.052,42.445 19.618,42.786 L5.618,53.786 C5.434,53.931 5.217,54 5.001,54 C4.704,54 4.411,53.869 4.214,53.618 C3.872,53.184 3.948,52.555 4.382,52.214 L18.382,41.214 C18.818,40.871 19.446,40.949 19.786,41.382 L19.786,41.382 Z M55.606,27.795 L33.648,44.545 C33.485,44.678 31.803,46 30,46 C28.206,46 26.537,44.628 26.352,44.472 L4.395,27.796 C3.955,27.462 3.869,26.835 4.204,26.396 C4.538,25.954 5.165,25.87 5.604,26.204 L27.604,42.913 C27.994,43.238 29.098,44 30,44 C30.929,44 32.057,43.258 32.414,42.972 L54.393,26.205 C54.832,25.867 55.462,25.956 55.795,26.394 C56.13,26.833 56.046,27.46 55.606,27.795 L55.606,27.795 Z M58,55 C58,56.71 56.71,58 55,58 L5,58 C3.317,58 2,56.683 2,55 L2,23 C2,20.683 2.915,18.81 4.555,17.831 L26.5
-char * path = "m335.8 415.19-136.33 61a6.16 6.16 0 0 0-3.5 3.57l-47.48 127.95a6.13 6.13 0 0 0 7.68 7.95l283-104 16 149.28-87.65 102.44a1.64 1.64 0 0 0-.34 1.49l16.68 62.56a1.64 1.64 0 0 0 2.7.78l112.32-103.86a1.64 1.64 0 0 1 2.24 0l112.32 103.86a1.64 1.64 0 0 0 2.7-.78l16.68-62.56a1.64 1.64 0 0 0-.34-1.49L544.6 661M424.56 374.18l-9.44-118.06a84.77 84.77 0 0 1 169.54 0l-9.54 119.21 225.41 100.88a6.16 6.16 0 0 1 3.5 3.57l47.48 127.93a6.13 6.13 0 0 1-7.68 7.95L560.56 511.59 554 572.83";
+#include "arc.h"
 
-typedef struct {
-	float x;
-	float y;
-} Point;
+char * pathx = "m335.8,415.19 l-136.33,61 a6.16,6.16,0,0,0,-3.5,3.57 l-47.48,127.95 a6.13,6.13,0,0,0,7.68,7.95 l283,-104 l16,149.28 l-87.65,102.44 a1.64,1.64,0,0,0,-0.34,1.49 l16.68,62.56 a1.64,1.64,0,0,0,2.7,0.78 l112.32,-103.86 a1.64,1.64,0,0,1,2.24,0 l112.32,103.86 a1.64,1.64,0,0,0,2.7,-0.78 l16.68,-62.56 a1.64,1.64,0,0,0,-0.34,-1.49 L544.6,661 M424.56,374.18 l-9.44,-118.06 a84.77,84.77,0,0,1,169.54,0 l-9.54,119.21 l225.41,100.88 a6.16,6.16,0,0,1,3.5,3.57 l47.48,127.93 a6.13,6.13,0,0,1,-7.68,7.95 L560.56,511.59 L554,572.83";
+char * path2 = "m20.0,20.0 m20.0,20.0 l20.0,20.0";
+char * path10 = "m33.58,41.519 l-13.633,6.1 a0.616,0.616,0,0,0,-0.35,0.357 l-4.748,12.795 a0.613,0.613,0,0,0,0.768,0.795 l28.3,-10.4 l1.6,14.928 l-8.765,10.244 a0.164,0.164,0,0,0,-0.034,0.149 l1.668,6.256 a0.164,0.164,0,0,0,0.27,0.078 l11.232,-10.386 a0.164,0.164,0,0,1,0.224,0 l11.232,10.386 a0.164,0.164,0,0,0,0.27,-0.078 l1.668,-6.256 a0.164,0.164,0,0,0,-00.34,-0.149 L54.46,66.1 M42.456,37.418 l-0.944,-11.806 a8.477,8.477,0,0,1,16.954,0 l-0.954,11.921 l22.541,10.088 a0.616,0.616,0,0,1,0.35,0.357 l4.748,12.793 a0.613,0.613,0,0,1,-0.768,0.795 L56.056,51.159 L55.4,57.283";
 
+char * path = "M20,20 a10.0,20.0,0,0,0,20.0,0.0";
 Point parse_point(char * str) {
 	Point p;
 	char * next;
@@ -55,38 +54,48 @@ int main() {
 		printf("; token: %s, cmd: %c\r\n", token, cmd);
 		fflush(stdout);
 		switch(cmd) {
+			case 'm':
+				Point parsed = parse_point( token + 1 );
+				origin.x += parsed.x;
+				origin.y += parsed.y;
+				last = origin;
+				printf("G0 X%f Y%f Z%f F3600 ; cmd: M\r\n", origin.x, origin.y, 0.0);
+				break;
 			case 'M':
 				origin = parse_point( token + 1 );
 				last = origin;
 				printf("G0 X%f Y%f Z%f F3600 ; cmd: M\r\n", origin.x, origin.y, 0.0);
 				break;
 
+			case 'l':
 			case 'L':
 				Point dest = parse_point( token + 1 );
+				if( cmd == 'l') {
+					dest.x += last.x;
+					dest.y += last.y;
+				} 
 				last = dest;
 				printf("G1 X%f Y%f Z%f E%d ; cmd: L\r\n", dest.x, dest.y, 0.0, e += e_delta);
 				break;
+
 
 			case 'Z':
 				printf("G1 X%f Y%f Z%f E%d ; cmd: Z\r\n", origin.x, origin.y, 0.0, e += e_delta);
 				break;
 
 			case 'H':
-				float x = parse_coord(token+1);
-				printf("G1 X%f Y%f Z%f E%d ; cmd H\r\n", x, last.y, 0.0, e += e_delta);
-				last.x = x;
+				float _x = parse_coord(token+1);
+				printf("G1 X%f Y%f Z%f E%d ; cmd H\r\n", _x, last.y, 0.0, e += e_delta);
+				last.x = _x;
 				break;
 
 			case 'V':
-				float y = parse_coord(token+1);
-				printf("G1 X%f Y%f Z%f E%d ; cmd H\r\n", last.x, y, 0.0, e += e_delta);
-				last.y = y;
+				float _y = parse_coord(token+1);
+				printf("G1 X%f Y%f Z%f E%d ; cmd H\r\n", last.x, _y, 0.0, e += e_delta);
+				last.y = _y;
 				break;
 
-			case 'c':
-				printf("G91\r\n");
 			case 'C':
-				if( cmd == 'C' ) printf("G90\r\n");
 				Point p1 = parse_point( token + 1 );
 				token = strtok_r(rest, " ", &rest);
 				Point p2 = parse_point( token );
@@ -105,6 +114,42 @@ int main() {
 
 				last = p3;
 				printf("G0 X%f Y%f Z%f F3600 ; cmd: C ; return \r\n", p3.x, p3.y, 0.0);
+				break;
+
+			case 'a':
+				Endpointic arc_data = parse_arc(token+1);
+				Centric arc = endpoint2center_parametrization(last, point_add(arc_data.p,last), arc_data.r, arc_data.angle, arc_data.fa, arc_data.fs);
+
+				printf("; %f %f %f %f %f %f (debug: %d)\r\n", arc.r.x, arc.r.y, arc.c.x, arc.c.y, arc.theta, arc.delta, arc_data.fs);
+
+				float t = arc.theta;
+
+				if( arc.theta == arc.delta ) arc_data.fs = 1;
+
+				float x,y; 
+				if( arc_data.fs ) {
+					while( t < arc.theta+arc.delta ) {
+						x = arc.r.x * cos(t) + arc.c.x;
+						y = arc.r.y * sin(t) + arc.c.y;
+						printf("G1 X%f Y%f Z%f, E%d; cmd: a, fs=1\r\n", x, y, 0.0, e += e_delta);
+
+						t += 0.1;
+					}
+				} else {
+					while( t > arc.theta+arc.delta ) {
+						x = arc.r.x * cos(t) + arc.c.x;
+						y = arc.r.y * sin(t) + arc.c.y;
+						printf("G1 X%f Y%f Z%f E%d; cmd: a, fs=0\r\n", x, y, 0.0, e += e_delta);
+
+						t -= 0.1;
+					}
+				}
+				last.x = x;
+				last.y = y;
+				break;
+
+			default:
+				printf("; UNHANDLED COMMAND: %c\r\n", cmd);
 				break;
 		}
 	}
