@@ -4,17 +4,27 @@
 
 #include "arc.h"
 
-char * pathx = "m335.8,415.19 l-136.33,61 a6.16,6.16,0,0,0,-3.5,3.57 l-47.48,127.95 a6.13,6.13,0,0,0,7.68,7.95 l283,-104 l16,149.28 l-87.65,102.44 a1.64,1.64,0,0,0,-0.34,1.49 l16.68,62.56 a1.64,1.64,0,0,0,2.7,0.78 l112.32,-103.86 a1.64,1.64,0,0,1,2.24,0 l112.32,103.86 a1.64,1.64,0,0,0,2.7,-0.78 l16.68,-62.56 a1.64,1.64,0,0,0,-0.34,-1.49 L544.6,661 M424.56,374.18 l-9.44,-118.06 a84.77,84.77,0,0,1,169.54,0 l-9.54,119.21 l225.41,100.88 a6.16,6.16,0,0,1,3.5,3.57 l47.48,127.93 a6.13,6.13,0,0,1,-7.68,7.95 L560.56,511.59 L554,572.83";
-char * path2 = "m20.0,20.0 m20.0,20.0 l20.0,20.0";
-char * path10 = "m33.58,41.519 l-13.633,6.1 a0.616,0.616,0,0,0,-0.35,0.357 l-4.748,12.795 a0.613,0.613,0,0,0,0.768,0.795 l28.3,-10.4 l1.6,14.928 l-8.765,10.244 a0.164,0.164,0,0,0,-0.034,0.149 l1.668,6.256 a0.164,0.164,0,0,0,0.27,0.078 l11.232,-10.386 a0.164,0.164,0,0,1,0.224,0 l11.232,10.386 a0.164,0.164,0,0,0,0.27,-0.078 l1.668,-6.256 a0.164,0.164,0,0,0,-00.34,-0.149 L54.46,66.1 M42.456,37.418 l-0.944,-11.806 a8.477,8.477,0,0,1,16.954,0 l-0.954,11.921 l22.541,10.088 a0.616,0.616,0,0,1,0.35,0.357 l4.748,12.793 a0.613,0.613,0,0,1,-0.768,0.795 L56.056,51.159 L55.4,57.283";
+char * path = "m16.0332,1.01172 c-2.83359,0,-5.21696,1.98985,-5.83789,4.64063 C9.46415,4.66648,8.30217,4.01563,6.99023,4.01563 c-2.19729,0,-4,1.8027,-4,4 c0,1.18819,0.537243,2.24934,1.36914,2.98438 H2 c-0.552262,0.000055,-0.999945,0.447738,-1,1 v18 c0.0000552,0.552262,0.447738,0.999945,1,1 h21 c0.552262,-0.000055,0.999945,-0.447738,1,-1 v-2.99805 h1.1875 C25.6054,28.1583,26.7077,29,28,29 h2 c0.552262,-0.000055,0.999945,-0.447738,1,-1 V15 c-0.000055,-0.552262,-0.447738,-0.999945,-1,-1 h-2 c-1.29443,0,-2.39816,0.844549,-2.81445,2.00391 H24 V12 c-0.000055,-0.552262,-0.447738,-0.999945,-1,-1 h-2.50195 c0.951374,-1.06117,1.53711,-2.4576,1.53711,-3.98828 c0.000009,-3.30187,-2.70008,-6,-6.00195,-6 Z m0,2 c2.22099,0,4.00196,1.77904,4.00195,4 c0.000006,2.17484,-1.71088,3.9164,-3.86719,3.98828 h-0.269531 c-2.15616,-0.07205,-3.86524,-1.81355,-3.86523,-3.98828 c-0.000006,-2.22096,1.77901,-4,4,-4 Z M6.99023,6.01563 c1.11641,0,2,0.883565,2,2 c4.00000e-7,1.1164,-0.883586,2.00195,-2,2.00195 c-1.11641,0,-2,-0.885556,-2,-2.00195 c0,-1.11643,0.883586,-2,2,-2 Z M10.6445,9.62695 C10.8895,10.1273,11.2,10.5891,11.5684,11 H9.62109 C10.0521,10.6193,10.4079,10.1581,10.6445,9.62695 Z M3,13 H22 V29 H3 Z m25,3 h1 v11 h-1 c-0.565608,0,-0.987669,-0.421627,-0.996094,-0.984375 v-9.03125 C27.0123,16.4216,27.4344,16,28,16 Z m-4,1.99609 h1 v7.00586 h-1 Z";
 
-char * path = "M20,20 a10.0,20.0,0,0,0,20.0,0.0";
 Point parse_point(char * str) {
 	Point p;
 	char * next;
 	p.x = strtof( str, &next );
 	p.y = strtof( next + 1, NULL );
 	return p;
+}
+
+void parse_cubic( char * str, Point *p1, Point *p2, Point *p3 ) {
+    char * next;
+
+    p1->x = strtof( str, &next );
+    p1->y = strtof( next + 1, &next );
+   
+    p2->x = strtof( next + 1, &next );
+    p2->y = strtof( next + 1, &next );
+
+    p3->x = strtof( next + 1, &next );
+    p3->y = strtof( next + 1, NULL );
 }
 
 float parse_coord(char * str) {
@@ -78,16 +88,34 @@ int main() {
 				printf("G1 X%f Y%f Z%f E%d ; cmd: L\r\n", dest.x, dest.y, 0.0, e += e_delta);
 				break;
 
-
+			case 'z':
 			case 'Z':
 				printf("G1 X%f Y%f Z%f E%d ; cmd: Z\r\n", origin.x, origin.y, 0.0, e += e_delta);
+				last = origin;
 				break;
 
+			case 'h':
+			{
+				float _x = parse_coord(token+1);
+				printf("G1 X%f Y%f Z%f E%d ; cmd h\r\n", last.x+_x, last.y, 0.0, e += e_delta);
+				last.x += _x;
+				break;
+			}
 			case 'H':
+			{
 				float _x = parse_coord(token+1);
 				printf("G1 X%f Y%f Z%f E%d ; cmd H\r\n", _x, last.y, 0.0, e += e_delta);
 				last.x = _x;
 				break;
+			}
+
+			case 'v':
+			{
+				float _y = parse_coord(token+1);
+				printf("G1 X%f Y%f Z%f E%d ; cmd v\r\n", last.x, last.y+_y, 0.0, e += e_delta);
+				last.y += _y;
+				break;
+			}
 
 			case 'V':
 				float _y = parse_coord(token+1);
@@ -96,11 +124,9 @@ int main() {
 				break;
 
 			case 'C':
-				Point p1 = parse_point( token + 1 );
-				token = strtok_r(rest, " ", &rest);
-				Point p2 = parse_point( token );
-				token = strtok_r(rest, " ", &rest);
-				Point p3 = parse_point( token );
+			{
+				Point p1,p2,p3;
+				parse_cubic(token + 1, &p1, &p2, &p3);
 
 				print_point(p1);
 				print_point(p2);
@@ -113,8 +139,29 @@ int main() {
 				}
 
 				last = p3;
-				printf("G0 X%f Y%f Z%f F3600 ; cmd: C ; return \r\n", p3.x, p3.y, 0.0);
+				printf("G1 X%f Y%f Z%f E%d ; cmd: C ; return \r\n", p3.x, p3.y, 0.0, e+= e_delta);
 				break;
+			}
+
+			case 'c':
+			{
+				Point p1,p2,p3;
+				parse_cubic(token + 1, &p1, &p2, &p3);
+
+				print_point(p1);
+				print_point(p2);
+				print_point(p3);
+
+				float delta = 0.1f;
+				for( float t = 0; t <= 1.0f; t += delta ) {
+					Point res = cubic_bezier(last, point_add(last,p1), point_add(last,p2), point_add(last,p3), t);
+					printf("G1 X%f Y%f Z%f E%d ; cmd: c\r\n", res.x, res.y, 0.0, e += e_delta);
+				}
+
+				last = point_add(last,p3);
+				printf("G1 X%f Y%f Z%f E%d ; cmd: c ; return \r\n", last.x, last.y, 0.0, e+= e_delta);
+				break;
+			}
 
 			case 'a':
 				Endpointic arc_data = parse_arc(token+1);
