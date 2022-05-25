@@ -1,6 +1,10 @@
 #ifndef __COMMON_H_
 #define __COMMON_H_
 
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+
 typedef uint8_t bool;
 
 typedef struct {
@@ -25,5 +29,8 @@ typedef struct {
     bool fs;
     Point p;
 } Endpointic;
+
+Point parse_point(char * str);
+float parse_coord(char * str);
 
 #endif
