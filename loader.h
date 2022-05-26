@@ -8,6 +8,6 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xpath.h>
 
-void load_svg(const char * path);
+void load_paths(const char *path, void(callback)(char *s));
 
 #endif
