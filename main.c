@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
 #include "arc.h"
 #include "bezier.h"
@@ -15,58 +14,27 @@ char *path3 = "M 20.0 20.0 L 40.0 20.0 L 40.0 40.0 Z";
 char *path4 = "M20.0,20.0L40.0,20.0L40.0,40.0Z";
 char *path5 = "M20.0 20.0L40.0 20.0L40.0 40.0Z";
 
-char *ltrim(char *s)
-{
-	while (isspace(*s))
-		s++;
-	return s;
-}
-
-char *rtrim(char *s)
-{
-	char *back = s + strlen(s);
-	while (isspace(*--back))
-		;
-	*(back + 1) = '\0';
-	return s;
-}
-
-char *trim(char *s)
-{
-	return rtrim(ltrim(s));
-}
-
-char *oryg;
-
-char *__strsep(char **stringp, const char *delim, char *used_delim)
-{
-	char *begin, *end;
-	begin = *stringp;
-
-	if (begin == NULL)
+char * parser( char ** s, char * delims, char * delim ) {
+	if( **s == NULL ) 
 		return NULL;
 
-	end = begin + strcspn(begin, delim);
+	int n = strcspn(*s + 1, delims) + 1;
 
-	if (*end)
-	{
-		*end++ = '\0';
-		*stringp = end;
-	}
-	else
-	{
-		*stringp = NULL;
-	}
+	char * token = (char*)malloc( n );
 
-	return begin;
+	memcpy( token, *s, n );
+	token[n] = '\0';
+
+	*s += n;
+	return token;
 }
 
 int main()
 {
 
-	char *token, *rest;
+	char *rest, *oryg;
 	oryg = strdup(path);
-	rest = oryg;
+	rest = trim(oryg);
 
 	Point origin = {0, 0};
 	Point last = {0, 0};
@@ -74,23 +42,35 @@ int main()
 	int e = 0;
 	int e_delta = 10;
 
-	// printf("G90\r\n");
+	printf("G90\r\n");
 
 	char *commands = "MZL";
 
+	char * token;
+	char delim;
+
+	while( (token = parser(&rest, commands, &delim ) ) ) {
+		printf("|%c|:|%s|\r\n", delim, token);
+		free(token);
+	}
+
+	return 0;
 	while (*rest != '\0')
 	{
-		int c = strcspn(rest, commands);
+		char cmd;
+		char * token;
+
 		int n = strcspn(rest + 1, commands) + 1;
 
-		char *token = (char *)malloc(n - c + 1);
-		memcpy(token, rest, n - c);
-		token[n - c] = '\0';
+		token = (char *)malloc(n);
+		memcpy(token, rest, n);
+		token[n] = '\0';
 
-		printf("%c => token: |%s| %d %d \r\n", *token, trim(token + 1), c, n);
+		printf("%c => token: |%s| %d \r\n", *token, trim(token + 1), n);
 
-		char cmd = *token;
+		cmd = *token;
 		token = trim(token);
+		//token powinien zaczynac sie za cmd i byc wtedy trimowany!!!
 
 		switch (cmd)
 		{

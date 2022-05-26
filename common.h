@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
 
 typedef uint8_t bool;
 
@@ -32,5 +34,9 @@ typedef struct {
 
 Point parse_point(char * str);
 float parse_coord(char * str);
+
+char *ltrim(char *s);
+char *rtrim(char *s);
+char *trim(char *s);
 
 #endif
