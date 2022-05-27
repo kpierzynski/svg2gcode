@@ -32,8 +32,11 @@ typedef struct {
     Point p;
 } Endpointic;
 
-Point parse_point(char * str);
-float parse_coord(char * str);
+char *parse_points(char *s, Point *p);
+
+char *parse_coord(char *s, float * c);
+
+Point point_subtract(Point a, Point b);
 
 char *ltrim(char *s);
 char *rtrim(char *s);

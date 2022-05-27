@@ -10,6 +10,6 @@
 #include "common.h"
 
 Point cubic_bezier(Point p0, Point p1, Point p2, Point p3, float t);
-void parse_cubic( char * str, Point *p1, Point *p2, Point *p3 );
+char * parse_cub( char * s, Point *p1, Point *p2, Point *p3 );
 
 #endif

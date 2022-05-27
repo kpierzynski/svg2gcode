@@ -1,16 +1,32 @@
 #include "common.h"
 
-Point parse_point(char * str) {
-	Point p;
-	char * next;
-	p.x = strtof( str, &next );
-	p.y = strtof( next + 1, NULL );
-	return p;
+char *parse_coord(char *s, float * c)
+{
+	if (*s == '\0')
+		return NULL;
+
+	char *next;
+	*c = strtof(s, &next);
+
+	return next;
 }
 
-float parse_coord(char * str) {
-	float c = strtof(str, NULL);
-	return c;
+char *parse_points(char *s, Point *p)
+{
+	if (*s == '\0')
+		return NULL;
+
+	char *next;
+	float x = strtof(s, &next);
+	float y = strtof(next + 1, &next);
+	p->x = x;
+	p->y = y;
+
+	return next;
+}
+
+Point point_subtract(Point a, Point b) {
+	return (Point){ a.x-b.x, a.y-b.y };
 }
 
 char *ltrim(char *s)
