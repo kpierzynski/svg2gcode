@@ -17,10 +17,8 @@ char *parse_points(char *s, Point *p)
 		return NULL;
 
 	char *next;
-	float x = strtof(s, &next);
-	float y = strtof(next + 1, &next);
-	p->x = x;
-	p->y = y;
+	p->x = strtof(s, &next);
+	p->y = strtof(next + 1, &next);
 
 	return next;
 }
