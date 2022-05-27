@@ -4,16 +4,17 @@
 
 #include "arc.h"
 #include "bezier.h"
+#include "loader.h"
 #include "common.h"
 
 void absolute_gcode()
 {
-	printf("G90\r\n");
+	printf("G90 ; absolute\r\n");
 }
 
 void relative_gcode()
 {
-	printf("G91\r\nM82\r\n");
+	printf("G91 ; relative\r\nM82\r\n");
 }
 
 char *parser(char **s, char *delims, char *delim)
@@ -33,17 +34,10 @@ char *parser(char **s, char *delims, char *delim)
 	return token;
 }
 
-void p(char *path)
+void parse(char *path)
 {
-	printf("PATH: %s\r\n", path);
-}
-
-int main()
-{
-
 	char *rest, *oryg;
-	oryg = strdup("M 15.9824 0.988281 C 14.3374 0.988281 12.9844 2.34133 12.9844 3.98633 C 12.9844 4.8777 13.3902 5.6757 14.0156 6.22852 C 10.0026 7.13403 7 10.7143 7 15 C 7 17.8774 6.96911 21.483 5.30859 25.0918 C 3.99336 25.4088 2.99609 26.5945 2.99609 28 C 2.99609 29.6447 4.35725 31.0039 6.00195 31.0039 L 25.998 31.0039 C 27.6427 31.0039 29.0039 29.6447 29.0039 28 C 29.0039 26.5945 28.0066 25.4088 26.6914 25.0918 C 25.0309 21.483 25 17.8774 25 15 C 25 10.7044 21.984 7.11588 17.957 6.2207 C 18.5775 5.6681 18.9785 4.8736 18.9785 3.98633 C 18.9785 2.34133 17.6274 0.988281 15.9824 0.988281 Z M 15.9824 2.98828 C 16.5465 2.98828 16.9863 3.4222 16.9863 3.98633 C 16.9863 4.55046 16.5466 4.99023 15.9824 4.99023 C 15.4183 4.99023 14.9844 4.55046 14.9844 3.98633 C 14.9844 3.4222 15.4183 2.98828 15.9824 2.98828 Z M 16 8 C 19.8953 8 23 11.1047 23 15 C 23 17.6559 23.0769 21.2674 24.5449 25 L 7.45508 25 C 8.92311 21.2674 9 17.6559 9 15 C 9 11.1047 12.1047 8 16 8 Z M 6.00195 27.002 L 25.998 27.002 C 26.5693 27.002 27.0039 27.4287 27.0039 28 C 27.0039 28.5713 26.5693 29.0039 25.998 29.0039 L 6.00195 29.0039 C 5.43066 29.0039 4.99805 28.5713 4.99805 28 C 4.99805 27.4287 5.43066 27.002 6.00195 27.002 Z");
-
+	oryg = strdup(path);
 	rest = trim(oryg);
 
 	Point origin = {0, 0};
@@ -79,16 +73,16 @@ int main()
 			while ((next = parse_points(next, &p)))
 			{
 				printf("; point.x: %f, point.y: %f\r\n", p.x, p.y);
-				last = p;
+
 				if (cnt == 0)
 				{
 					printf("G0 X%f Y%f Z%f F3600 ; cmd: M\r\n", p.x, p.y, 0.0);
-					origin = p;
+					origin = (delim == 'm') ? point_add(last,p) : p;
 					last = origin;
 				}
 				else
 				{
-					printf("G1 X%f Y%f Z%f E%d ; cmd: L\r\n", last.x, last.y, 0.0, e += e_delta);
+					printf("G1 X%f Y%f Z%f E%d ; cmd: L\r\n", p.x, p.y, 0.0, e += e_delta);
 				}
 				cnt++;
 			}
@@ -126,7 +120,7 @@ int main()
 			{
 				// printf("G1 X%f Y%f Z%f E%d ; (c=%f, next:%s) cmd h\r\n", c, last.y, 0.0, e += e_delta, c, next);
 				printf("G1 X%f Z%f E%d ; (c=%f, next:%s) cmd h\r\n", c, 0.0, e += e_delta, c, next);
-				last.x = c;
+				last.x = (delim == 'h') ? last.x + c : c;
 			}
 			absolute_gcode();
 			break;
@@ -141,7 +135,7 @@ int main()
 			{
 				// printf("G1 X%f Y%f Z%f E%d ; (c=%f, next:%s) cmd h\r\n", c, last.y, 0.0, e += e_delta, c, next);
 				printf("G1 Y%f Z%f E%d ; (c=%f, next:%s) cmd h\r\n", c, 0.0, e += e_delta, c, next);
-				last.y = c;
+				last.y = (delim == 'v') ? last.y + c : c;
 			}
 			absolute_gcode();
 			break;
@@ -150,7 +144,7 @@ int main()
 		case 'C':
 		{
 			Point p1, p2, p3;
-			fprintf(stderr, ";last: %f %f\r\n", last.x, last.y);
+
 			while ((next = parse_cub(next, &p1, &p2, &p3)))
 			{
 				float delta = 0.1;
@@ -175,6 +169,7 @@ int main()
 			{
 				float delta = 0.1;
 				printf("; p0.x: %f, p0.y: %f, p1.x: %f, p1.y: %f, p2.x: %f, p2.y: %f, p3.x: %f, p3.y: %f\r\n", last.x, last.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+				fprintf(stdout, ";last: %f %f\r\n", last.x, last.y);
 
 				for (float t = 0; t <= 1.0f; t += delta)
 				{
@@ -226,13 +221,24 @@ int main()
 			break;
 		}
 
-				default:
+		default:
 			printf("; UNHANDLED COMMAND: %c\r\n", delim);
 			break;
 		}
 
 		free(token);
 	}
+}
+
+int main(int argc, char *argv[])
+{
+	if (argc != 2)
+	{
+		fprintf(stderr, "Invalid number of arguments.\r\nUsage: %s [filename]\r\n", argv[0]);
+		return 1;
+	}
+
+	load_paths(argv[1], parse);
 
 	return 0;
 }
