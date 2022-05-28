@@ -193,6 +193,7 @@ void parse(char *path)
 		case 's':
 		{
 			Point p1, p2;
+			if( second_control.x == 0 && second_control.y == 0 ) second_control = last;
 			while ((next = parse_ref_cub(next, &p1, &p2)))
 			{
 				float delta = 0.1;
@@ -203,7 +204,7 @@ void parse(char *path)
 					res = point_add(res, last);
 					printf("G1 X%f Y%f Z%f E%d ; cmd: C\r\n", res.x, res.y, 0.0, e += e_delta);
 				}
-								second_control = point_add(last, p1);
+				second_control = point_add(last, p1);
 				last = point_add(last, p2);
 
 				printf("G1 X%f Y%f Z%f E%d ; cmd: C ; return \r\n", last.x, last.y, 0.0, e += e_delta);
@@ -215,6 +216,7 @@ void parse(char *path)
 		case 'S':
 		{
 			Point p1, p2;
+			if( second_control.x == 0 && second_control.y == 0 ) second_control = last;
 			while ((next = parse_ref_cub(next, &p1, &p2)))
 			{
 				float delta = 0.1;
