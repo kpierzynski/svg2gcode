@@ -33,6 +33,10 @@ Point point_subtract(Point a, Point b)
 	return (Point){a.x - b.x, a.y - b.y};
 }
 
+Point point_reflection(Point a, Point origin) {
+	return (Point){ 2*origin.x - a.x, 2*origin.y - a.y };
+}
+
 char *ltrim(char *s)
 {
 	while (isspace(*s))

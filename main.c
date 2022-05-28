@@ -36,12 +36,15 @@ char *parser(char **s, char *delims, char *delim)
 
 void parse(char *path)
 {
+	//fprintf(stderr, "%s\r\n", path);
 	char *rest, *oryg;
 	oryg = strdup(path);
 	rest = trim(oryg);
 
 	Point origin = {0, 0};
 	Point last = {0, 0};
+
+	Point second_control = {0, 0};
 
 	int e = 0;
 	int e_delta = 10;
@@ -97,7 +100,7 @@ void parse(char *path)
 			while ((next = parse_points(next, &p)))
 			{
 				printf("G1 X%f Y%f Z%f E%d ; cmd: L\r\n", p.x, p.y, 0.0, e += e_delta);
-				last = (delim == 'l') ? point_add(last,p) : p;
+				last = (delim == 'l') ? point_add(last, p) : p;
 			}
 			absolute_gcode();
 			break;
@@ -156,6 +159,7 @@ void parse(char *path)
 					printf("G1 X%f Y%f Z%f E%d ; cmd: C\r\n", res.x, res.y, 0.0, e += e_delta);
 				}
 				last = p3;
+				second_control = p2;
 				printf("G1 X%f Y%f Z%f E%d ; cmd: C ; return \r\n", last.x, last.y, 0.0, e += e_delta);
 			}
 			absolute_gcode();
@@ -168,8 +172,8 @@ void parse(char *path)
 			while ((next = parse_cub(next, &p1, &p2, &p3)))
 			{
 				float delta = 0.1;
-				printf("; p0.x: %f, p0.y: %f, p1.x: %f, p1.y: %f, p2.x: %f, p2.y: %f, p3.x: %f, p3.y: %f\r\n", last.x, last.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
-				fprintf(stdout, ";last: %f %f\r\n", last.x, last.y);
+				//fprintf(stderr, "; p0.x: %f, p0.y: %f, p1.x: %f, p1.y: %f, p2.x: %f, p2.y: %f, p3.x: %f, p3.y: %f\r\n", last.x, last.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+				//fprintf(stderr, ";last: %f %f\r\n", last.x, last.y);
 
 				for (float t = 0; t <= 1.0f; t += delta)
 				{
@@ -177,12 +181,40 @@ void parse(char *path)
 					res = point_add(res, last);
 					printf("G1 X%f Y%f Z%f E%d ; cmd: C\r\n", res.x, res.y, 0.0, e += e_delta);
 				}
+				second_control = point_add(last, p2);
 				last = point_add(last, p3);
+
 				printf("G1 X%f Y%f Z%f E%d ; cmd: C ; return \r\n", last.x, last.y, 0.0, e += e_delta);
 			}
 			absolute_gcode();
 			break;
 		}
+
+		case 's':
+		{
+			Point p1, p2;
+			while ((next = parse_ref_cub(next, &p1, &p2)))
+			{
+				float delta = 0.1;
+				Point reflected = point_reflection(point_subtract(second_control, last), (Point){0, 0});
+				// fprintf(stderr, "; p0.x: %f, p0.y: %f, p1.x: %f, p1.y: %f, p2.x: %f, p2.y: %f, p3.x: %f, p3.y: %f\r\n", 0.0, 0.0, reflected.x, reflected.y, p1.x, p1.y, p2.x, p2.y);
+
+				//fprintf(stderr, ";last: %f %f\r\n", last.x, last.y);
+				//fprintf(stderr, ";second_control: %f %f\r\n", second_control.x, second_control.y);
+				for (float t = 0; t <= 1.0f; t += delta)
+				{
+					Point res = cubic_bezier((Point){0, 0}, reflected, p1, p2, t);
+					res = point_add(res, last);
+					printf("G1 X%f Y%f Z%f E%d ; cmd: C\r\n", res.x, res.y, 0.0, e += e_delta);
+				}
+				last = point_add(last, p2);
+				second_control = p1;
+				printf("G1 X%f Y%f Z%f E%d ; cmd: C ; return \r\n", last.x, last.y, 0.0, e += e_delta);
+			}
+			absolute_gcode();
+			break;
+		}
+		
 
 		case 'a':
 		{
@@ -232,6 +264,8 @@ void parse(char *path)
 
 int main(int argc, char *argv[])
 {
+#if 1
+
 	if (argc != 2)
 	{
 		fprintf(stderr, "Invalid number of arguments.\r\nUsage: %s [filename]\r\n", argv[0]);
@@ -240,6 +274,11 @@ int main(int argc, char *argv[])
 
 	load_paths(argv[1], parse);
 
+#else
 
+	char *path = "m 39.013 25.563 c -0.553 0 -1 -0.447 -1 -1 s 0.447 -1 1 -1";
+	parse(path);
+
+#endif
 	return 0;
 }

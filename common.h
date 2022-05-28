@@ -37,6 +37,7 @@ char *parse_points(char *s, Point *p);
 char *parse_coord(char *s, float * c);
 
 Point point_subtract(Point a, Point b);
+Point point_reflection(Point a, Point origin);
 
 char *ltrim(char *s);
 char *rtrim(char *s);

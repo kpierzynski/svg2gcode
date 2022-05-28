@@ -57,7 +57,6 @@ void load_paths(const char *path, void(callback)(char *s))
 		for (i = 0; i < nodeset->nodeNr; i++)
 		{
 			if( callback ) callback((char *)xmlGetProp(nodeset->nodeTab[i], (xmlChar *)"d"));
-			//return;
 		}
 		xmlXPathFreeObject(result);
 	}

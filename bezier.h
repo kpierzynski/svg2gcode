@@ -11,5 +11,6 @@
 
 Point cubic_bezier(Point p0, Point p1, Point p2, Point p3, float t);
 char * parse_cub( char * s, Point *p1, Point *p2, Point *p3 );
+char *parse_ref_cub(char *s, Point *p1, Point *p2);
 
 #endif

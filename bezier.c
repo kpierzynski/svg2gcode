@@ -43,3 +43,30 @@ char *parse_cub(char *s, Point *p1, Point *p2, Point *p3)
 
     return next;
 }
+
+char *parse_ref_cub(char *s, Point *p1, Point *p2)
+{
+    if (*s == '\0')
+        return NULL;
+
+    char *next;
+    p1->x = strtof(s, &next);
+
+    while (*next == ',')
+        next++;
+
+    p1->y = strtof(next, &next);
+
+    while (*next == ',')
+        next++;
+    p2->x = strtof(next, &next);
+
+    while (*next == ',')
+        next++;
+    p2->y = strtof(next, &next);
+
+    while (*next == ',')
+        next++;
+
+    return next;
+}
