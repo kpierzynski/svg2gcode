@@ -36,7 +36,7 @@ char *parser(char **s, char *delims, char *delim)
 
 void parse(char *path)
 {
-	//fprintf(stderr, "%s\r\n", path);
+	// fprintf(stderr, "%s\r\n", path);
 	char *rest, *oryg;
 	oryg = strdup(path);
 	rest = trim(oryg);
@@ -172,8 +172,8 @@ void parse(char *path)
 			while ((next = parse_cub(next, &p1, &p2, &p3)))
 			{
 				float delta = 0.1;
-				//fprintf(stderr, "; p0.x: %f, p0.y: %f, p1.x: %f, p1.y: %f, p2.x: %f, p2.y: %f, p3.x: %f, p3.y: %f\r\n", last.x, last.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
-				//fprintf(stderr, ";last: %f %f\r\n", last.x, last.y);
+				// fprintf(stderr, "; p0.x: %f, p0.y: %f, p1.x: %f, p1.y: %f, p2.x: %f, p2.y: %f, p3.x: %f, p3.y: %f\r\n", last.x, last.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+				// fprintf(stderr, ";last: %f %f\r\n", last.x, last.y);
 
 				for (float t = 0; t <= 1.0f; t += delta)
 				{
@@ -197,24 +197,43 @@ void parse(char *path)
 			{
 				float delta = 0.1;
 				Point reflected = point_reflection(point_subtract(second_control, last), (Point){0, 0});
-				// fprintf(stderr, "; p0.x: %f, p0.y: %f, p1.x: %f, p1.y: %f, p2.x: %f, p2.y: %f, p3.x: %f, p3.y: %f\r\n", 0.0, 0.0, reflected.x, reflected.y, p1.x, p1.y, p2.x, p2.y);
-
-				//fprintf(stderr, ";last: %f %f\r\n", last.x, last.y);
-				//fprintf(stderr, ";second_control: %f %f\r\n", second_control.x, second_control.y);
 				for (float t = 0; t <= 1.0f; t += delta)
 				{
 					Point res = cubic_bezier((Point){0, 0}, reflected, p1, p2, t);
 					res = point_add(res, last);
 					printf("G1 X%f Y%f Z%f E%d ; cmd: C\r\n", res.x, res.y, 0.0, e += e_delta);
 				}
+								second_control = point_add(last, p1);
 				last = point_add(last, p2);
+
+				printf("G1 X%f Y%f Z%f E%d ; cmd: C ; return \r\n", last.x, last.y, 0.0, e += e_delta);
+			}
+			absolute_gcode();
+			break;
+		}
+
+		case 'S':
+		{
+			Point p1, p2;
+			while ((next = parse_ref_cub(next, &p1, &p2)))
+			{
+				float delta = 0.1;
+				Point reflected = point_reflection(second_control, last);
+				fprintf(stderr, "last: %f %f\r\n", last.x, last.y);
+				fprintf(stderr, "reflected: %f %f\r\n", reflected.x, reflected.y);
+				fprintf(stderr, "second_control: %f %f\r\n", second_control.x, second_control.y);
+				for (float t = 0; t <= 1.0f; t += delta)
+				{
+					Point res = cubic_bezier(last, reflected, p1, p2, t);
+					printf("G1 X%f Y%f Z%f E%d ; cmd: C\r\n", res.x, res.y, 0.0, e += e_delta);
+				}
+				last = p2;
 				second_control = p1;
 				printf("G1 X%f Y%f Z%f E%d ; cmd: C ; return \r\n", last.x, last.y, 0.0, e += e_delta);
 			}
 			absolute_gcode();
 			break;
 		}
-		
 
 		case 'a':
 		{
