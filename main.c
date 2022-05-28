@@ -48,7 +48,7 @@ void parse(char *path)
 
 	absolute_gcode();
 
-	char *commands = "mMcCzZlLvVhHa";
+	char *commands = "mMcCzZlLvVhHaAsSqQtT";
 
 	char *token;
 	char delim;
@@ -77,7 +77,7 @@ void parse(char *path)
 				if (cnt == 0)
 				{
 					printf("G0 X%f Y%f Z%f F3600 ; cmd: M\r\n", p.x, p.y, 0.0);
-					origin = (delim == 'm') ? point_add(last,p) : p;
+					origin = (delim == 'm') ? point_add(last, p) : p;
 					last = origin;
 				}
 				else
@@ -97,7 +97,7 @@ void parse(char *path)
 			while ((next = parse_points(next, &p)))
 			{
 				printf("G1 X%f Y%f Z%f E%d ; cmd: L\r\n", p.x, p.y, 0.0, e += e_delta);
-				last = p;
+				last = (delim == 'l') ? point_add(last,p) : p;
 			}
 			absolute_gcode();
 			break;
@@ -222,7 +222,7 @@ void parse(char *path)
 		}
 
 		default:
-			printf("; UNHANDLED COMMAND: %c\r\n", delim);
+			fprintf(stderr, "UNHANDLED COMMAND: %c\r\n", delim);
 			break;
 		}
 
@@ -239,6 +239,7 @@ int main(int argc, char *argv[])
 	}
 
 	load_paths(argv[1], parse);
+
 
 	return 0;
 }

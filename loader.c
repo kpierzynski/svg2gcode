@@ -22,20 +22,20 @@ xmlXPathObjectPtr getnodeset(xmlDocPtr doc, xmlChar *xpath)
 	context = xmlXPathNewContext(doc);
 	if (context == NULL)
 	{
-		printf("Error in xmlXPathNewContext\n");
+		fprintf(stderr, "Error in xmlXPathNewContext\n");
 		return NULL;
 	}
 	result = xmlXPathEvalExpression(xpath, context);
 	xmlXPathFreeContext(context);
 	if (result == NULL)
 	{
-		printf("Error in xmlXPathEvalExpression\n");
+		fprintf(stderr, "Error in xmlXPathEvalExpression\n");
 		return NULL;
 	}
 	if (xmlXPathNodeSetIsEmpty(result->nodesetval))
 	{
 		xmlXPathFreeObject(result);
-		printf("No result\n");
+		fprintf(stderr, "No result\n");
 		return NULL;
 	}
 	return result;
@@ -57,7 +57,7 @@ void load_paths(const char *path, void(callback)(char *s))
 		for (i = 0; i < nodeset->nodeNr; i++)
 		{
 			if( callback ) callback((char *)xmlGetProp(nodeset->nodeTab[i], (xmlChar *)"d"));
-			return;
+			//return;
 		}
 		xmlXPathFreeObject(result);
 	}
