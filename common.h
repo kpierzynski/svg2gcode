@@ -33,8 +33,10 @@ typedef struct {
 } Endpointic;
 
 char *parse_points(char *s, Point *p);
-
 char *parse_coord(char *s, float * c);
+
+void gcode_move(Point p);
+void gcode_draw(Point p);
 
 Point point_subtract(Point a, Point b);
 Point point_reflection(Point a, Point origin);

@@ -28,6 +28,17 @@ char *parse_points(char *s, Point *p)
 	return next;
 }
 
+void gcode_move(Point p) {
+	fprintf(stdout, "G0 X%f Y%f Z%f\r\n", p.x, p.y, 0.0f );
+}
+
+void gcode_draw(Point p) {
+	static int e = 0;
+	const int e_delta = 10.0f;
+
+	fprintf(stdout, "G1 X%f Y%f Z%f E%d\r\n", p.x, p.y, 0.0, e += e_delta);
+}
+
 Point point_subtract(Point a, Point b)
 {
 	return (Point){a.x - b.x, a.y - b.y};
