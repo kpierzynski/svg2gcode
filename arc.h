@@ -9,7 +9,6 @@
 
 #include "common.h"
 
-Point point_add(Point a, Point b);
 float angle_function( float ux, float uy, float vx, float vy );
 Centric endpoint2center_parametrization( Point p1, Point p2, Vector2 r, float angle, bool fa, bool fs );
 char *parse_arc(char *s, Endpointic *arc);

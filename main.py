@@ -5,7 +5,7 @@ from xml.dom import minidom
 import matplotlib.pyplot as plt
 from math import sin,cos, fmod, acos, pi
 # read the SVG file
-doc = minidom.parse('bell.svg')
+doc = minidom.parse('svgs/plane.svg')
 path_strings = [path.getAttribute('d') for path
                 in doc.getElementsByTagName('path')]
 doc.unlink()
@@ -75,9 +75,6 @@ def end2cen(p1,p2,r,ang,fa,fs):
 
 	return rx,ry,cx,cy,theta,delta
 
-
-
-path_strings = ["M10.0 10.0 l40.0 0.0 0.0 10.0 l-30.0 0.0 L 10.0 30.0 "]
 
 for path_string in path_strings:
     path = parse_path(path_string)

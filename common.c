@@ -11,7 +11,7 @@ char *parse_coord(char *s, float *c)
 	return next;
 }
 
-char *parse_points(char *s, Point *p)
+char *parse_point(char *s, Point *p)
 {
 	if (*s == '\0')
 		return NULL;
@@ -37,6 +37,11 @@ void gcode_draw(Point p) {
 	const int e_delta = 10.0f;
 
 	fprintf(stdout, "G1 X%f Y%f Z%f E%d\r\n", p.x, p.y, 0.0, e += e_delta);
+}
+
+Point point_add(Point a, Point b)
+{
+    return (Point){a.x + b.x, a.y + b.y};
 }
 
 Point point_subtract(Point a, Point b)

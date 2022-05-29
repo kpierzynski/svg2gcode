@@ -15,11 +15,6 @@ float clamp(float value, float _min, float _max)
     return max(min(value, _max), _min);
 }
 
-Point point_add(Point a, Point b)
-{
-    return (Point){a.x + b.x, a.y + b.y};
-}
-
 char *parse_arc(char *s, Endpointic *arc)
 {
     if (*s == '\0')
@@ -27,16 +22,26 @@ char *parse_arc(char *s, Endpointic *arc)
 
     char *next;
     arc->r.x = strtof(s, &next);
-    arc->r.y = strtof(next + 1, &next);
-
-    arc->angle = strtof(next + 1, &next);
-
-    arc->fa = strtol(next + 1, &next, 10);
-    arc->fs = strtol(next + 1, &next, 10);
-
-    arc->p.x = strtof(next + 1, &next);
-    arc->p.y = strtof(next + 1, &next);
-
+    while (*next == ',')
+        next++;
+    arc->r.y = strtof(next, &next);
+    while (*next == ',')
+        next++;
+    arc->angle = strtof(next, &next);
+    while (*next == ',')
+        next++;
+    arc->fa = strtol(next, &next, 10);
+    while (*next == ',')
+        next++;
+    arc->fs = strtol(next, &next, 10);
+    while (*next == ',')
+        next++;
+    arc->p.x = strtof(next, &next);
+    while (*next == ',')
+        next++;
+    arc->p.y = strtof(next, &next);
+    while (*next == ',')
+        next++;
     return next;
 }
 
@@ -84,8 +89,8 @@ Centric endpoint2center_parametrization(Point p1, Point p2, Vector2 r, float ang
     float theta = angle_function(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry);
     float delta = angle_function((x1p - cxp) / rx, (y1p - cyp) / ry, (-x1p - cxp) / rx, (-y1p - cyp) / ry);
 
-    // if( !fs )
-    // delta -= 2*M_PI;
+    //if( !fs )
+    //    delta -= 2*M_PI;
 
     Centric cen = {{rx, ry}, {cx, cy}, theta, delta};
     return cen;
