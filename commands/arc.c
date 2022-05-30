@@ -102,10 +102,11 @@ static Centric endpoint2center_parametrization(Point p1, Point p2, Vector2 r, fl
 
 	float theta = angle_function(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry);
 	float delta = angle_function((x1p - cxp) / rx, (y1p - cyp) / ry, (-x1p - cxp) / rx, (-y1p - cyp) / ry);
-	float delta_mod = fmod(delta, 2 * M_PI);
 
 	if (!fs)
 		delta -= 2 * M_PI;
+
+	delta = fmod(delta, 2*M_PI);
 
 	Centric cen = {{rx, ry}, {cx, cy}, theta, delta};
 	return cen;
@@ -129,7 +130,7 @@ void svg_arc(uint8_t is_relative, char *args, Point *initial_point, Point *curre
 
 		for (uint8_t i = 0; i < 100; i++)
 		{
-			float angle = arc.theta + arc.delta * i/100;
+			float angle = arc.theta + arc.delta * i / 100;
 			float cosr = cos(arc_data.angle);
 			float sinr = sin(arc_data.angle);
 
