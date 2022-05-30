@@ -1,5 +1,8 @@
 #include "common.h"
 
+float ax, ay;
+float bx, by;
+
 char *parse_coord(char *s, float *c)
 {
 	if (*s == '\0')
@@ -28,7 +31,23 @@ char *parse_point(char *s, Point *p)
 	return next;
 }
 
+void set_function_x(float _a, float _b) {
+	ax = _a;
+	bx = _b;
+}
+
+void set_function_y(float _a, float _b) {
+	ay = _a;
+	by = _b;
+}
+
+void apply_function(Point * p) {
+	p->x = ax*p->x + bx;
+	p->y = ay*p->y + by;
+};
+
 void gcode_move(Point p) {
+	apply_function(&p);
 	fprintf(stdout, "G0 X%f Y%f Z%f\r\n", p.x, p.y, 0.0f );
 }
 
@@ -36,6 +55,7 @@ void gcode_draw(Point p) {
 	static int e = 0;
 	const int e_delta = 10.0f;
 
+	apply_function(&p);
 	fprintf(stdout, "G1 X%f Y%f Z%f E%d\r\n", p.x, p.y, 0.0, e += e_delta);
 }
 

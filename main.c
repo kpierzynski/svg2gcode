@@ -125,10 +125,18 @@ void parse(char *path)
 
 int main(int argc, char *argv[])
 {
-	if( argc != 2 ) {
-		fprintf(stderr, "Invalid arguments. Usage: %s [filepath]\r\n", argv[0] );
+	if( argc != 4 ) {
+		fprintf(stderr, "Invalid arguments. Usage: %s [filepath] [function_x] [function_y]\r\n", argv[0] );
 		return 1;
 	}
+
+	float ax,bx;
+	sscanf(argv[2], "%fx+%f", &ax, &bx );
+	set_function_x(ax,bx);
+
+	float ay,by;
+	sscanf(argv[3], "%fy+%f", &ay, &by );
+	set_function_y(ay,by);
 
 	load_paths(argv[1], parse);
 
