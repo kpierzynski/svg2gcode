@@ -1,6 +1,12 @@
 #include "bezier.h"
 
 static Point second_control;
+static uint8_t is_second_control_set = 0;
+
+void reset_cubic()
+{
+	is_second_control_set = 0;
+}
 
 static Point cubic_curve(Point p0, Point p1, Point p2, Point p3, float t)
 {
@@ -101,6 +107,7 @@ void svg_cubic(uint8_t is_relative, char *args, Point *initial_point, Point *cur
 			second_control = p2;
 			*current_point = p3;
 		}
+		is_second_control_set = 1;
 		gcode_draw(*current_point);
 	}
 }
@@ -115,9 +122,12 @@ void svg_cubic_s(uint8_t is_relative, char *args, Point *initial_point, Point *c
 	{
 		p0 = (is_relative) ? (Point){0, 0} : *current_point;
 		p1 = point_reflection(second_control, *current_point);
-		if( is_relative ) p1 = point_reflection(point_subtract(second_control, *current_point), (Point){0, 0});
+		if (is_relative)
+			p1 = point_reflection(point_subtract(second_control, *current_point), (Point){0, 0});
+		if (!is_second_control_set)
+			p1 = *current_point;
 
-		//fprintf(stderr, "; %f %f %f %f %f %f %f %f\r\n", p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+		// fprintf(stderr, "; %f %f %f %f %f %f %f %f\r\n", p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
 
 		for (float t = 0; t <= 1.0f; t += delta)
 		{
@@ -137,6 +147,7 @@ void svg_cubic_s(uint8_t is_relative, char *args, Point *initial_point, Point *c
 			second_control = p2;
 			*current_point = p3;
 		}
+		is_second_control_set = 1;
 		gcode_draw(*current_point);
 	}
 }
