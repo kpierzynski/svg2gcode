@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "arc.h"
-#include "bezier.h"
 #include "loader.h"
 #include "common.h"
 
 #include "commands/move.h"
+#include "commands/line.h"
+#include "commands/close.h"
+#include "commands/arc.h"
 
 void absolute_gcode()
 {
@@ -68,6 +69,41 @@ void parse(char *path)
 			case 'M':
 				svg_move(0, args, &origin, &last);
 				break;
+
+			case 'l':
+				svg_line(1, args, &origin, &last);
+				break;
+
+			case 'L':
+				svg_line(0, args, &origin, &last);
+				break;
+
+			case 'h':
+				svg_lineH(1, args, &origin, &last);
+				break;
+
+			case 'H':
+				svg_lineH(0, args, &origin, &last);
+				break;
+
+			case 'v':
+				svg_lineV(1, args, &origin, &last);
+				break;
+			case 'V':
+				svg_lineV(0, args, &origin, &last);
+				break;
+
+			case 'z':
+			case 'Z':
+				svg_close(0, NULL, &origin, &last);
+				break;
+
+			case 'a':
+				svg_arc(1, args, &origin, &last);
+				break;
+			case 'A':
+				svg_arc(0, args, &origin, &last);
+				break;
 		}
 
 		free(token);
@@ -76,7 +112,11 @@ void parse(char *path)
 
 int main(int argc, char *argv[])
 {
-	char *path = "M 10.0 10.0 20.0 10.0 20.0 20.0 m -10 0 0 10 M 30.0 10.0 40.0 10.0 ";
+	//char *path = "M 10.0 10.0 20.0 10.0 20.0 20.0 m -10 0 0 10 M 30.0 10.0 40.0 10.0 "; //Mm TEST
+	//char * path = "m 10 10 L 20 10 20 20 10 30 l -10 0 m 30 0 h -10 -10 v 10 10 M 0 0 H 20 30 "; //LlhHvV test
+	//char * path = "M 10 10 h 10 v 10 z"; //zZ test
+	//char * path = "m 10 10 a 10 5 0 0 1 20 -20 h 20"; //a test
+	//char * path = "M 10 10 A 10 5 0 0 1 30 -10 H 40"; //A test
 	parse(path);
 
 	return 0;

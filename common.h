@@ -7,7 +7,6 @@
 #include <ctype.h>
 #include <string.h>
 
-typedef uint8_t bool;
 
 typedef struct {
     float x,y;
@@ -27,8 +26,8 @@ typedef struct {
 typedef struct {
     Vector2 r;
     float angle;
-    bool fa;
-    bool fs;
+    uint8_t fa;
+    uint8_t fs;
     Point p;
 } Endpointic;
 

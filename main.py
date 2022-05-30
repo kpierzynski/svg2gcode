@@ -76,6 +76,7 @@ def end2cen(p1,p2,r,ang,fa,fs):
 	return rx,ry,cx,cy,theta,delta
 
 
+path_strings = ["m 0 0 a 1 0.5 0 0 1 10 0"]
 for path_string in path_strings:
     path = parse_path(path_string)
     for e in path:
