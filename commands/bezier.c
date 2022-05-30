@@ -104,3 +104,39 @@ void svg_cubic(uint8_t is_relative, char *args, Point *initial_point, Point *cur
 		gcode_draw(*current_point);
 	}
 }
+
+void svg_cubic_s(uint8_t is_relative, char *args, Point *initial_point, Point *current_point)
+{
+	char *next = args;
+	Point p0, p1, p2, p3;
+
+	float delta = 0.05;
+	while ((next = parse_ref_cub(next, &p2, &p3)))
+	{
+		p0 = (is_relative) ? (Point){0, 0} : *current_point;
+		p1 = point_reflection(second_control, *current_point);
+		if( is_relative ) p1 = point_reflection(point_subtract(second_control, *current_point), (Point){0, 0});
+
+		//fprintf(stderr, "; %f %f %f %f %f %f %f %f\r\n", p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+
+		for (float t = 0; t <= 1.0f; t += delta)
+		{
+			Point result = cubic_curve(p0, p1, p2, p3, t);
+			if (is_relative)
+				result = point_add(result, *current_point);
+			gcode_draw(result);
+		}
+
+		if (is_relative)
+		{
+			second_control = point_add(*current_point, p2);
+			*current_point = point_add(*current_point, p3);
+		}
+		else
+		{
+			second_control = p2;
+			*current_point = p3;
+		}
+		gcode_draw(*current_point);
+	}
+}
