@@ -28,3 +28,4 @@ TODO:
 * reduce code in functions that draw bezier
 * reduce code in parser function
 * handle polyline, circle and ellipse tags
+* write proper makefile
