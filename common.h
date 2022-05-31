@@ -31,6 +31,9 @@ typedef struct {
     Point p;
 } Endpointic;
 
+void replace_comma(char * s);
+char * parse_floats(char *s, float *f, int n);
+
 void set_function_y(float _a, float _b);
 void set_function_x(float _a, float _b);
 

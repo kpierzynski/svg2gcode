@@ -6,7 +6,7 @@ void svg_line(uint8_t is_relative, char *args, Point *initial_point, Point *curr
 
 	char *next = args;
 
-	while ((next = parse_point(next, &parsed)))
+	while ((next = parse_floats(next, (float*)&parsed, 2)))
 	{
 		if (is_relative)
 			parsed = point_add(parsed, *current_point);
@@ -24,7 +24,7 @@ void svg_lineH(uint8_t is_relative, char *args, Point *initial_point, Point *cur
 
 	char *next = args;
 
-	while ((next = parse_coord(next, &c)))
+	while ((next = parse_floats(next, &c, 1)))
 	{
 		p.x = (is_relative) ? p.x + c : c;
 		gcode_draw(p);
@@ -40,7 +40,7 @@ void svg_lineV(uint8_t is_relative, char *args, Point *initial_point, Point *cur
 
 	char *next = args;
 
-	while ((next = parse_coord(next, &c)))
+	while ((next = parse_floats(next, &c, 1)))
 	{
 		p.y = (is_relative) ? p.y + c : c;
 		gcode_draw(p);

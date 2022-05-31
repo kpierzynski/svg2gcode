@@ -14,7 +14,7 @@ Path commands:
 - &#9745; mM
 - &#9745; lL
 - &#9745; vV
-- &#9745; hH   
+- &#9745; hH 
 - &#9745; zZ
 - &#9745; aA
 - &#9745; cC
@@ -28,4 +28,4 @@ TODO:
 * reduce code in functions that draw bezier
 * reduce code in parser function
 * handle polyline, circle and ellipse tags
-* write proper makefile
+* ~~write proper makefile~~

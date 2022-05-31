@@ -2,3 +2,5 @@ main
 *.swp
 *.gcode
 svgs
+test
+obj
