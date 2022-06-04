@@ -1,5 +1,6 @@
 # svg2gcode
-Converter from SVG PATHS to GCODE
+Converter from SVG PATHS to GCODE.
+This program was created for converting svg pcbs from easyeda to gcode using one command instead of tedious inkscape.
 
 ![example_gcode](./images/camera_gcode.png)
 ![example_svg](./images/camera_svg.png)
@@ -22,7 +23,6 @@ Path commands:
 
 ---
 TODO:
-* add ImGui and convert project to C++
 * ~~handle rest path commands~~
 * reduce code in functions that draw bezier
 * reduce code in parser function
