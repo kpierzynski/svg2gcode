@@ -5,9 +5,7 @@ Converter from SVG PATHS to GCODE
 ![example_svg](./images/camera_svg.png)
 
 ---
-Usage: `./svg2gcode [filepath2svg] [function to transform X axis] [function to transform Y asix]`
-
-Transforming function example: `1x+2`, `2x+-2`, `10y+-20`
+Usage: `./svg2gcode [filepath2svg]`
 
 ---
 Path commands:
@@ -25,8 +23,8 @@ Path commands:
 ---
 TODO:
 * add ImGui and convert project to C++
-* handle rest path commands
+* ~~handle rest path commands~~
 * reduce code in functions that draw bezier
 * reduce code in parser function
-* handle polyline, circle and ellipse tags
+* handle ~~polyline~~, ~~polygon~~, circle and ellipse tags
 * ~~write proper makefile~~

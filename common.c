@@ -68,8 +68,8 @@ void set_function_y(float _a, float _b)
 
 void apply_function(Point *p)
 {
-	p->x = ax * p->x + bx;
-	p->y = ay * p->y + by;
+	p->x = ax * (p->x + bx);
+	p->y = ay * (p->y + by);
 };
 
 void gcode_move(Point p)

@@ -8,6 +8,8 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xpath.h>
 
+#include "common.h"
+
 void load_paths(const char *path, void(callback)(char *s));
 
 #endif
