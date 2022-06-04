@@ -6,7 +6,7 @@ void svg_line(uint8_t is_relative, char *args, Point *initial_point, Point *curr
 
 	char *next = args;
 
-	while ((next = parse_floats(next, (float*)&parsed, 2)))
+	while ((next = parse_point(next, &parsed)))
 	{
 		if (is_relative)
 			parsed = point_add(parsed, *current_point);

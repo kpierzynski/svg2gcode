@@ -24,6 +24,7 @@ Path commands:
 
 ---
 TODO:
+* add ImGui and convert project to C++
 * handle rest path commands
 * reduce code in functions that draw bezier
 * reduce code in parser function

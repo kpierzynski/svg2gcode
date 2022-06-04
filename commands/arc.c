@@ -128,9 +128,9 @@ void svg_arc(uint8_t is_relative, char *args, Point *initial_point, Point *curre
 
 		Point p;
 
-		for (uint8_t i = 0; i < 100; i++)
+		for (uint8_t i = 0; i < 25; i++)
 		{
-			float angle = arc.theta + arc.delta * i / 100;
+			float angle = arc.theta + arc.delta * i / 25;
 			float cosr = cos(arc_data.angle);
 			float sinr = sin(arc_data.angle);
 

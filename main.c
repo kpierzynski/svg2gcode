@@ -56,7 +56,7 @@ void parse(char *path)
 
 	while ((token = parser(&rest, commands, &delim)))
 	{
-		printf("; (%p) |%c|:|%s|\r\n", token, delim, token + 1);
+		printf("; |%c|:|%s|\r\n", delim, token + 1);
 
 		char *args = trim(token + 1);
 
@@ -117,6 +117,20 @@ void parse(char *path)
 		case 'S':
 			svg_cubic_s(0, args, &origin, &last);
 			break;
+
+		case 'q':
+			svg_quadratic(1, args, &origin, &last);
+			break;
+		case 'Q':
+			svg_quadratic(0, args, &origin, &last);
+			break;
+
+		case 't':
+			svg_quadratic_s(1, args, &origin, &last);
+			break;
+		case 'T':
+			svg_quadratic_s(0, args, &origin, &last);
+			break;
 		}
 		free(token);
 	}
@@ -125,23 +139,23 @@ void parse(char *path)
 
 int main(int argc, char *argv[])
 {
-	//if( argc != 4 ) {
-	//	fprintf(stderr, "Invalid arguments. Usage: %s [filepath] [function_x] [function_y]\r\n", argv[0] );
-	//	return 1;
-	//}
+	if( argc != 4 ) {
+		fprintf(stderr, "Invalid arguments. Usage: %s [filepath] [function_x] [function_y]\r\n", argv[0] );
+		return 1;
+	}
 
-	//float ax,bx;
-	//sscanf(argv[2], "%fx+%f", &ax, &bx );
-	//set_function_x(ax,bx);
+	float ax,bx;
+	sscanf(argv[2], "%fx+%f", &ax, &bx );
+	set_function_x(ax,bx);
 
-	//float ay,by;
-	//sscanf(argv[3], "%fy+%f", &ay, &by );
-	//set_function_y(ay,by);
+	float ay,by;
+	sscanf(argv[3], "%fy+%f", &ay, &by );
+	set_function_y(ay,by);
 
-	//load_paths(argv[1], parse);
+	load_paths(argv[1], parse);
 
 	// char *path = "M 10.0 10.0 20.0 10.0 20.0 20.0 m -10 0 0 10 M 30.0 10.0 40.0 10.0 "; //Mm TEST
-	char * path = "m 10 10 L 20 10 20 20 10 30 l -10 0 m 30 0 h -10 -10 v 10 10 M 0 0 H 20 30 "; //LlhHvV test
+	//char * path = "m 10 10 L 20 10 20 20 10 30 l -10 0 m 30 0 h -10 -10 v 10 10 M 0 0 H 20 30 "; //LlhHvV test
 	// char * path = "M 10 10 h 10 v 10 z"; //zZ test
 	//char * path = "m 0 7 a 10 5 0 0 0 8 -7"; //a test
 	// char * path = "M 10 10 A 10 5 0 0 1 30 -10 H 40"; //A test
@@ -154,7 +168,9 @@ int main(int argc, char *argv[])
 
 	//char * path = "M362.54,328.74c-0.01-0.01-0.01-0.01-0.02-0.02l-100.71-87.67c-2.63-2.29-6.56-2.29-9.19,0l-98.48,85.73    l-2.23,1.94c-0.01,0.01-0.01,0.01-0.02,0.02l-17.22,14.99l-20.53-23.58l62.23-54.18c2.92-2.54,3.22-6.96,0.68-9.88    c-2.54-2.92-6.96-3.22-9.88-0.68l-67.51,58.78c-2.92,2.54-3.22,6.96-0.68,9.88l29.72,34.14c1.22,1.4,2.94,2.26,4.8,2.39    c1.87,0.13,3.68-0.48,5.08-1.7l118.63-103.27l89.69,78.08l1.8,1.57l2.22,1.93v120.19h-93.62v-91.85c0-3.87-3.13-7-7-7h-50.15    c-3.87,0-7,3.13-7,7v91.85H163.5v-87.74c0-3.87-3.13-7-7-7s-7,3.13-7,7v94.74c0,3.87,3.13,7,7,7h43.66h50.15h107.62    c3.87,0,7-3.13,7-7v-115l10.92,9.5c1.28,1.11,2.91,1.72,4.6,1.72c0.16,0,0.32-0.01,0.48-0.02c1.85-0.13,3.58-0.99,4.8-2.39    l29.72-34.14c2.54-2.92,2.23-7.34-0.68-9.88l-56.25-48.98v-71.83c0-3.87-3.13-7-7-7h-39.83c-3.87,0-7,3.13-7,7v24.96l-42.87-37.33    c-2.63-2.29-6.56-2.29-9.19,0L203,224.22c-2.92,2.54-3.22,6.96-0.68,9.88c2.54,2.92,6.96,3.22,9.88,0.68l45.02-39.2L307.08,239    c2.07,1.8,5,2.23,7.5,1.09c2.5-1.14,4.1-3.63,4.1-6.37v-33.34h25.83v68.01c0,2.02,0.88,3.95,2.4,5.28l53.38,46.47l-20.53,23.58    L362.54,328.74z M207.16,457.38v-84.85h36.15v84.85H207.16z";
 
-	parse(path);
+	//char * path = "m 10 10 q 5 -10 10 0"; //qQ test
+	//char * path = "m 10 10 q 5 -10 10 0 t 3 0"; //tT test
+	//parse(path);
 
 	return 0;
 }
